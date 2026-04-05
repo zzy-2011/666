@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抓不到我</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        h1 {
+            position: absolute;
+            top: 30px;
+            color: #e0e0e0;
+            font-size: 24px;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        #jump-btn {
+            position: absolute;
+            padding: 14px 32px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: transform 0.1s, box-shadow 0.1s;
+            user-select: none;
+        }
+
+        #jump-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        #counter {
+            position: absolute;
+            bottom: 30px;
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>试试看能不能点到按钮！</h1>
+    <button id="jump-btn">点我呀！</button>
+    <div id="counter">尝试次数：0</div>
+
+    <script>
+        const btn = document.getElementById('jump-btn');
+        const counter = document.getElementById('counter');
+        let attempts = 0;
+
+        function getRandomPosition() {
+            const btnWidth = btn.offsetWidth;
+            const btnHeight = btn.offsetHeight;
+            const maxX = window.innerWidth - btnWidth;
+            const maxY = window.innerHeight - btnHeight;
+            const x = Math.floor(Math.random() * maxX);
+            const y = Math.floor(Math.random() * maxY);
+            return { x, y };
+        }
+
+        function jumpButton() {
+            const pos = getRandomPosition();
+            btn.style.left = pos.x + 'px';
+            btn.style.top = pos.y + 'px';
+            attempts++;
+            counter.textContent = '尝试次数：' + attempts;
+        }
+
+        // 鼠标移入时跳走
+        btn.addEventListener('mouseenter', jumpButton);
+
+        // 触屏设备：触摸时跳走
+        btn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            jumpButton();
+        });
+
+        // 初始化按钮位置到页面中心
+        window.addEventListener('load', function() {
+            btn.style.left = (window.innerWidth - btn.offsetWidth) / 2 + 'px';
+            btn.style.top = (window.innerHeight - btn.offsetHeight) / 2 + 'px';
+        });
+
+        // 窗口大小变化时重新定位
+        window.addEventListener('resize', function() {
+            const rect = btn.getBoundingClientRect();
+            const maxX = window.innerWidth - btn.offsetWidth;
+            const maxY = window.innerHeight - btn.offsetHeight;
+            if (rect.left > maxX) btn.style.left = maxX + 'px';
+            if (rect.top > maxY) btn.style.top = maxY + 'px';
+        });
+    </script>
+</body>
+</html>
